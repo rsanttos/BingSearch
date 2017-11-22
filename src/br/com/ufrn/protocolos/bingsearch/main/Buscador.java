@@ -20,13 +20,36 @@ public class Buscador {
 			}
 			in.close();
 			
-			System.out.println("***********************************");
-			System.out.println(htmlPagina.indexOf("class=\"b_algo\""));
-			System.out.println(htmlPagina.lastIndexOf("class=\"b_algo\""));
-			System.out.println(htmlPagina.substring(htmlPagina.indexOf("class=\"b_algo\""), htmlPagina.lastIndexOf("class=\"b_algo\"")));
+			percorreHTML(htmlPagina);
 		} catch (IOException ex) {
 			System.err.println(ex);
 		}
+	}
+	
+	public void percorreHTML(String html) {
+
+		html = html.substring(html.indexOf("class=\"b_algo\""), html.lastIndexOf("class=\"b_algo\""));
+		String trechoPadrao = "<a href=\"";
+		int posicaoInicial = html.indexOf(trechoPadrao) + trechoPadrao.length();
+		
+		int contador = 0;
+		String stringTeste = "";
+		while(contador < 1 && posicaoInicial < html.length()) {
+			if(html.charAt(posicaoInicial + 1) == '"') {
+				contador++;
+			}
+			stringTeste += html.charAt(posicaoInicial);
+			posicaoInicial++;
+		}
+		
+		System.out.println(stringTeste);
+		
+		html = html.replaceFirst(trechoPadrao, "");
+		
+		if(html.indexOf(trechoPadrao) > 0) {
+			percorreHTML(html);
+		}
+		
 	}
 
 	public String trataTextoBusca(String textoBusca) {
